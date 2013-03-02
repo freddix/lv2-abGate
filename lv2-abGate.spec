@@ -2,12 +2,12 @@
 
 Summary:	LV2 Noise Gate
 Name:		lv2-abGate
-Version:	1.1.3
+Version:	1.1.6
 Release:	1
 License:	GPL v3
 Group:		X11/Applications/Sound
 Source0:	http://downloads.sourceforge.net/project/abgate/abGate-source/%{rname}-%{version}.tar.gz
-# Source0-md5:	27fcf7faf46b83396f438b2b9f323b08
+# Source0-md5:	1c8aea03d44ef023cef3451a9fb16c91
 BuildRequires:	gtkmm-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	lv2-devel
@@ -19,8 +19,12 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %prep
 %setup -qn %{rname}-%{version}
 
-sed -i	-e "s/g++/%{__cxx}/g" \
+%{__sed} -i -e "s/g++/%{__cxx}/g" \
 	-e "s/-O3/%{rpmcxxflags}/g" Makefile
+
+%ifarch %{x8664}
+%{__sed} -i -e "s|/usr/lib|%{_libdir}|" plugin_configuration.h
+%endif
 
 %build
 %{__make} \
